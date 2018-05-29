@@ -156,12 +156,16 @@ extension PresentrAnimation: UIViewControllerAnimatedTransitioning {
     }
 
     private func animate(presentrContext: PresentrTransitionContext, transitionContext: UIViewControllerContextTransitioning, duration: TimeInterval) {
+        presentrContext.fromViewController?.beginAppearanceTransition(false, animated: true)
+        presentrContext.toViewController?.beginAppearanceTransition(true, animated: true)
         beforeAnimation(using: presentrContext)
         UIView.animate(withDuration: duration, animations: {
             self.performAnimation(using: presentrContext)
         }) { (completed) in
             self.afterAnimation(using: presentrContext)
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+            presentrContext.fromViewController?.endAppearanceTransition()
+            presentrContext.toViewController?.endAppearanceTransition()
         }
     }
 
