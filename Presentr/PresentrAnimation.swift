@@ -156,16 +156,22 @@ extension PresentrAnimation: UIViewControllerAnimatedTransitioning {
     }
 
     private func animate(presentrContext: PresentrTransitionContext, transitionContext: UIViewControllerContextTransitioning, duration: TimeInterval) {
-        presentrContext.fromViewController?.beginAppearanceTransition(false, animated: true)
-        presentrContext.toViewController?.beginAppearanceTransition(true, animated: true)
+        if presentrContext.isPresenting {
+            presentrContext.fromViewController?.childViewControllers.first?.childViewControllers.first?.childViewControllers.first?.childViewControllers.first?.viewWillDisappear(true)
+        } else {
+            presentrContext.toViewController?.childViewControllers.first?.childViewControllers.first?.childViewControllers.first?.childViewControllers.first?.viewWillAppear(true)
+        }
         beforeAnimation(using: presentrContext)
         UIView.animate(withDuration: duration, animations: {
             self.performAnimation(using: presentrContext)
         }) { (completed) in
+            if presentrContext.isPresenting {
+                presentrContext.fromViewController?.childViewControllers.first?.childViewControllers.first?.childViewControllers.first?.childViewControllers.first?.viewDidDisappear(true)
+            } else {
+                presentrContext.toViewController?.childViewControllers.first?.childViewControllers.first?.childViewControllers.first?.childViewControllers.first?.viewDidAppear(true)
+            }
             self.afterAnimation(using: presentrContext)
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-            presentrContext.fromViewController?.endAppearanceTransition()
-            presentrContext.toViewController?.endAppearanceTransition()
         }
     }
 
